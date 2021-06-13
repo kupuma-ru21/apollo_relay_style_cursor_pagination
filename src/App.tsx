@@ -13,15 +13,29 @@ export const VARIABLES = {
 const App = () => {
   const { data, loading, error, fetchMore } = useQuery(REPOSITORIES, {
     variables: VARIABLES,
+    notifyOnNetworkStatusChange: true,
   });
   const nextPage = useCallback(
     (pageInfo) => {
       fetchMore({
         variables: {
-          first: null,
-          before: null,
-          last: 5,
+          first: 5,
           after: pageInfo.endCursor,
+          last: null,
+          before: null,
+        },
+      });
+    },
+    [fetchMore]
+  );
+  const prevPage = useCallback(
+    (pageInfo) => {
+      fetchMore({
+        variables: {
+          first: null,
+          after: null,
+          last: 5,
+          before: pageInfo.startCursor,
         },
       });
     },
@@ -40,7 +54,12 @@ const App = () => {
           return <li key={name}>{name}</li>;
         })}
       </ul>
-      <button onClick={() => nextPage(pageInfo)}>nextPage</button>
+      {pageInfo.hasPreviousPage && (
+        <button onClick={() => prevPage(pageInfo)}>prevPage</button>
+      )}
+      {pageInfo.hasNextPage && (
+        <button onClick={() => nextPage(pageInfo)}>nextPage</button>
+      )}
     </div>
   );
 };
