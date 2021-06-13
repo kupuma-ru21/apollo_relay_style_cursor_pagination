@@ -17,4 +17,21 @@ const endPoint = 'https://api.github.com/graphql';
 const httpLink = new HttpLink({ uri: endPoint });
 const link = ApolloLink.from([headersLink, httpLink]);
 
-export const client = new ApolloClient({ link, cache: new InMemoryCache() });
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        search: {
+          merge(existing, incoming) {
+            return { ...existing, ...incoming };
+          },
+          read(existing) {
+            return existing;
+          },
+        },
+      },
+    },
+  },
+});
+
+export const client = new ApolloClient({ link, cache });
