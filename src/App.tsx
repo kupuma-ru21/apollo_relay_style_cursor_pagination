@@ -1,6 +1,5 @@
-import { useQuery } from '@apollo/client';
 import { useCallback } from 'react';
-import { REPOSITORIES } from './graphql';
+import { useRepositoriesQuery } from './graphql/generate';
 export const PER_PAGE = 5;
 export const VARIABLES = {
   first: 5,
@@ -11,9 +10,8 @@ export const VARIABLES = {
 };
 
 const App = () => {
-  const { data, loading, error, fetchMore } = useQuery(REPOSITORIES, {
+  const { data, loading, error, fetchMore } = useRepositoriesQuery({
     variables: VARIABLES,
-    notifyOnNetworkStatusChange: true,
   });
   const nextPage = useCallback(
     (pageInfo) => {
@@ -44,20 +42,20 @@ const App = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-  const repositoriesInfo = data.search.edges;
-  const pageInfo = data.search.pageInfo;
+  const repositoriesInfo = data?.search.edges;
+  const pageInfo = data?.search.pageInfo;
   return (
     <div>
       <ul>
-        {repositoriesInfo.map((repository: any) => {
+        {repositoriesInfo?.map((repository: any) => {
           const { name } = repository.node;
           return <li key={name}>{name}</li>;
         })}
       </ul>
-      {pageInfo.hasPreviousPage && (
+      {pageInfo?.hasPreviousPage && (
         <button onClick={() => prevPage(pageInfo)}>prevPage</button>
       )}
-      {pageInfo.hasNextPage && (
+      {pageInfo?.hasNextPage && (
         <button onClick={() => nextPage(pageInfo)}>nextPage</button>
       )}
     </div>
