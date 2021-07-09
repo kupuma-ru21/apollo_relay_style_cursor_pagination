@@ -1,0 +1,40 @@
+interface Repository {
+  name: String!
+}
+
+type SearchResultItem implements Repository {
+  name: String!
+}
+
+type SearchResultItemEdge {
+  cursor: String!
+  node: SearchResultItem
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type SearchResultItemConnection {
+  repositoryCount: Int!
+  edges: [SearchResultItemEdge]
+  pageInfo: PageInfo!
+}
+
+enum SearchType {
+  REPOSITORY
+}
+
+type Query {
+  search(
+    after: String
+    before: String
+    first: Int
+    last: Int
+    query: String!
+    type: SearchType!
+  ): SearchResultItemConnection!
+}
