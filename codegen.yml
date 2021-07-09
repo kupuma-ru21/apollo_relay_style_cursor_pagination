@@ -1,0 +1,9 @@
+overwrite: true
+schema: 'schema.graphql'
+generates:
+  src/graphql/generate/index.ts:
+    documents: 'src/graphql/index.ts'
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
