@@ -6,7 +6,7 @@ export const VARIABLES = {
   after: null,
   last: null,
   before: null,
-  query: 'フロントエンドエンジニア',
+  query: 'apollo graphql test',
 };
 
 const App = () => {
